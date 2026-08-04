@@ -22,11 +22,16 @@ jobs:
       # Ubuntu runners ship an old default clang-format via apt (often
       # 14-18), well below this repo's minimum of 20. Install a specific
       # modern version from LLVM's official apt repository instead.
+      #
+      # llvm.sh only sets up the repo and installs its own default package
+      # set (clang/lldb/lld/clangd) — clang-format is a separate package in
+      # the same repo and must be installed explicitly.
       - name: Install clang-format 20
         run: |
           wget -qO /tmp/llvm.sh https://apt.llvm.org/llvm.sh
           chmod +x /tmp/llvm.sh
           sudo /tmp/llvm.sh 20
+          sudo apt-get install -y clang-format-20
           sudo ln -sf "$(command -v clang-format-20)" /usr/local/bin/clang-format
           clang-format --version
 

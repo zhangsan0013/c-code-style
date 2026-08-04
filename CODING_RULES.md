@@ -1399,8 +1399,3 @@ merging past a red check unless you tell it not to. To make it a real gate:
 4. (Optional) Also enable "Require branches to be up to date before
    merging" so PRs are re-checked against the latest base branch.
 5. Save. PRs with formatting violations can no longer be merged until fixed.
-
-> This workflow was authored against LLVM's documented apt-installation
-> method and this repository's own verified `scripts/check-format.sh`, but
-> was not executed in a live GitHub Actions run while writing it. Verify it
-> once with a real PR before relying on it as a required check.
