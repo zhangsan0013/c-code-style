@@ -23,8 +23,6 @@ This document describes the C code style used by Tilen MAJERLE in his projects a
   - [Header/source files](#headersource-files)
   - [Clang format integration](#clang-format-integration)
     - [Continuous integration (GitHub Actions)](#continuous-integration-github-actions)
-  - [Artistic style configuration](#artistic-style-configuration)
-  - [Eclipse formatter](#eclipse-formatter)
 
 ## The single most important rule
 
@@ -1406,24 +1404,3 @@ merging past a red check unless you tell it not to. To make it a real gate:
 > method and this repository's own verified `scripts/check-format.sh`, but
 > was not executed in a live GitHub Actions run while writing it. Verify it
 > once with a real PR before relying on it as a required check.
-
-## Artistic style configuration
-
-[AStyle](http://astyle.sourceforge.net/) is a great piece of software that can
-help with formatting the code based on input configuration.
-
-This repository contains `astyle-code-format.cfg` file which can be used with `AStyle` software.
-
-```
-astyle --options="astyle-code-format.cfg" "input_path/*.c,*.h" "input_path2/*.c,*.h"
-```
-
-> Artistic style configuration is obsolete and no longer updated
-
-## Eclipse formatter
-
-Repository contains `eclipse-ext-kr-format.xml` file that can be used with
-eclipse-based toolchains to set formatter options.
-
-It is based on K&R formatter with modifications to respect above rules.
-You can import it within eclipse settings, `Preferences -> LANGUAGE -> Code Style -> Formatter` tab.
