@@ -40,9 +40,15 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/**
+ * \brief           This is the custom function pointer type that accepts void* as a parameter
+ * \param[in]       par_a: Parameter description goes here
+ */
+typedef void (*my_func_type_fn)(void* par_a);
+
 /* Function prototypes, name aligned, lowercase names */
-int32_t sum(int32_t a, int32_t b);
-int32_t divide(int32_t a, int32_t b);
+int32_t sum(int32_t par_a, int32_t par_b);
+int32_t divide(int32_t par_a, int32_t par_b);
 
 #ifdef __cplusplus
 }

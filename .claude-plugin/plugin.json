@@ -1,0 +1,11 @@
+{
+  "name": "c-code-style",
+  "version": "1.0.0",
+  "description": "C coding style rules and clang-format enforcement for AI coding agents, based on Tilen Majerle's C style guide.",
+  "author": {
+    "name": "Tilen Majerle",
+    "url": "https://github.com/MaJerle"
+  },
+  "homepage": "https://github.com/MaJerle/c-code-style",
+  "license": "MIT"
+}

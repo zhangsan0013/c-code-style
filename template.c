@@ -35,11 +35,23 @@
 
 /**
  * \brief           Sum `2` numbers
- * \param[in]       a: First value
- * \param[in]       b: Second value
+ * \param[in]       par_a: First value
+ * \param[in]       par_b: Second value
  * \return          Sum of input values
  */
 int32_t
-sum(int32_t a, int32_t b) {
-    return a + b;
+sum(int32_t par_a, int32_t par_b) {
+    return par_a + par_b;
+}
+
+/**
+ * \brief           Sum `2` numbers together
+ * \note            This is a strictly module-private function, hence the `prv_` prefix and `static` keyword
+ * \param[in]       par_a: First parameter
+ * \param[in]       par_b: Second parameter
+ * \return          Sum of input values
+ */
+static int32_t
+prv_sum(int32_t par_a, int32_t par_b) {
+    return par_a + par_b;
 }

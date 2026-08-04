@@ -1,0 +1,40 @@
+name: clang-format
+
+# Gates pull requests (and pushes to main) on clang-format compliance using
+# this repository's .clang-format rules. Combine with a branch protection
+# rule that requires this check to pass — see the "Continuous Integration"
+# section in CODING_RULES.md for the exact steps.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  clang-format-check:
+    name: Check clang-format compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Ubuntu runners ship an old default clang-format via apt (often
+      # 14-18), well below this repo's minimum of 20. Install a specific
+      # modern version from LLVM's official apt repository instead.
+      - name: Install clang-format 20
+        run: |
+          wget -qO /tmp/llvm.sh https://apt.llvm.org/llvm.sh
+          chmod +x /tmp/llvm.sh
+          sudo /tmp/llvm.sh 20
+          sudo ln -sf "$(command -v clang-format-20)" /usr/local/bin/clang-format
+          clang-format --version
+
+      - name: Check formatting of all C/C++ sources
+        run: |
+          mapfile -t files < <(find . \( -name '*.c' -o -name '*.h' \) -not -path './.git/*')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No .c/.h files found."
+            exit 0
+          fi
+          scripts/check-format.sh --check "${files[@]}"
