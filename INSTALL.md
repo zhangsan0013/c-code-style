@@ -1,8 +1,8 @@
 # Installing this skill
 
 This repository is both a C style guide (`CODING_RULES.md`) and a
-distributable Claude Code plugin that teaches an agent to follow it and
-enforce formatting with `clang-format`. Pick the path that matches your
+distributable Claude Code and Codex plugin that teaches an agent to follow it
+and enforce formatting with `clang-format`. Pick the path that matches your
 setup.
 
 ## Option 1: Claude Code plugin (marketplace)
@@ -21,13 +21,33 @@ as part of that flow.
 > The plugin bundles the whole repository — `CODING_RULES.md`, the
 > `template.c`/`template.h` references, and `scripts/check-format.sh` all
 > travel with it, so it works the same whether you're inside this repo or in
-> your own project. This distribution path (`.claude-plugin/marketplace.json`
+> your own project. The formatter script explicitly uses the bundled
+> `.clang-format`, even when target files live elsewhere. This distribution
+> path (`.claude-plugin/marketplace.json`
 > + `plugin.json`) was authored against Claude Code's documented plugin
 > conventions but not exercised end-to-end with a live `/plugin install` in
 > this session — verify the two commands above work before pointing others
 > at it, and open an issue on this repo if they don't.
 
-## Option 2: Vendor it into your own project (any agent, incl. Codex)
+## Option 2: Codex plugin (marketplace)
+
+From a terminal, add this repository as a Codex marketplace and install the
+plugin:
+
+```sh
+codex plugin marketplace add zhangsan0013/c-code-style
+codex plugin add c-code-style@c-code-style-marketplace
+```
+
+Start a new Codex task after installation so the `c-code-style` skill is
+loaded. It activates when Codex writes, edits, formats, or reviews C source and
+header files.
+
+The Codex plugin uses `.codex-plugin/plugin.json`. The existing
+`.claude-plugin/marketplace.json` remains the shared marketplace entry, so the
+same repository can be installed by both Claude Code and Codex.
+
+## Option 3: Vendor it into your own project (any agent, incl. Codex)
 
 Copy these into your repository:
 
@@ -46,7 +66,7 @@ If you're using Claude Code specifically and don't want the marketplace
 plugin, copy `.claude/skills/c-code-style/` into your project instead (or in
 addition) for project-scoped auto-discovery.
 
-## Option 3: CI only, no agent
+## Option 4: CI only, no agent
 
 Just want the formatting gate on pull requests, no AI agent involved? Copy
 `.github/workflows/clang-format.yml`, `.clang-format`, and

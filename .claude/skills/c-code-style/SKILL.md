@@ -67,13 +67,19 @@ as you write, not after:
 
 ## 4. Format the code
 
-After writing or editing any `.c`/`.h` file, run the formatter using this
-repository's `.clang-format` (it's found automatically by walking up from the
-file's directory — no path needed):
+After writing or editing any `.c`/`.h` file, resolve the plugin root from this
+`SKILL.md` location (three directories above it), then run the bundled formatter
+script by absolute path:
 
 ```sh
-scripts/check-format.sh <changed-file.c> [<changed-file.h> ...]
+<plugin-root>/scripts/check-format.sh <changed-file.c> [<changed-file.h> ...]
 ```
+
+The script explicitly passes `<plugin-root>/.clang-format` to `clang-format`,
+so it applies this plugin's rules even when the changed files live in another
+repository. If Bash is unavailable, perform the same operation directly with
+`clang-format --style=file:<plugin-root>/.clang-format` after confirming the
+installed version is `20` or newer.
 
 This script:
 
@@ -89,7 +95,7 @@ To verify compliance without writing changes (e.g. before reporting a task
 done), use `--check` instead:
 
 ```sh
-scripts/check-format.sh --check <file.c> [<file.h> ...]
+<plugin-root>/scripts/check-format.sh --check <file.c> [<file.h> ...]
 ```
 
 Exits `0` if already compliant, non-zero (with the specific violations) if

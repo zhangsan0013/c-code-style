@@ -1,0 +1,35 @@
+{
+  "name": "c-code-style",
+  "version": "1.0.0",
+  "description": "C coding style rules and clang-format enforcement for AI coding agents, based on Tilen Majerle's C style guide.",
+  "author": {
+    "name": "Tilen Majerle",
+    "url": "https://github.com/MaJerle"
+  },
+  "homepage": "https://github.com/MaJerle/c-code-style",
+  "repository": "https://github.com/zhangsan0013/c-code-style",
+  "license": "MIT",
+  "keywords": [
+    "c",
+    "coding-style",
+    "clang-format",
+    "embedded-c",
+    "code-review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "C Code Style",
+    "shortDescription": "Apply strict C rules and clang-format checks",
+    "longDescription": "Write, edit, and review C source and header files using the bundled coding rules, reference templates, and clang-format verification workflow.",
+    "developerName": "Tilen Majerle",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/MaJerle/c-code-style",
+    "defaultPrompt": [
+      "Apply this C coding style while writing or reviewing C code."
+    ]
+  }
+}

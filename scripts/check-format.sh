@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Checks that clang-format is installed and new enough, then formats
 # (or, with --check, verifies formatting of) the given C/C++ files
-# using this repository's .clang-format rules (or the nearest one
-# found by walking up from the file's directory).
+# using this repository's .clang-format rules.
 #
 # Usage:
 #   check-format.sh <file.c> [file.h ...]        # format files in place
@@ -11,6 +10,12 @@
 set -euo pipefail
 
 MIN_MAJOR=20
+script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+style_file="${script_dir}/../.clang-format"
+
+if command -v cygpath >/dev/null 2>&1; then
+    style_file="$(cygpath -w "$style_file")"
+fi
 
 print_install_help() {
     echo "clang-format was not found (or is too old) on PATH." >&2
@@ -61,8 +66,8 @@ if [ "$#" -eq 0 ]; then
 fi
 
 if [ "$mode" = "check" ]; then
-    clang-format --dry-run --Werror "$@"
+    clang-format --style="file:${style_file}" --dry-run --Werror "$@"
 else
-    clang-format -i "$@"
+    clang-format --style="file:${style_file}" -i "$@"
     echo "Formatted with clang-format $major: $*"
 fi
