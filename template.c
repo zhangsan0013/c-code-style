@@ -1,6 +1,6 @@
 /**
  * \file            template.c
- * \brief           Template source file
+ * \brief           模板源文件
  */
 
 /*
@@ -34,24 +34,42 @@
 #include "template.h"
 
 /**
- * \brief           Sum `2` numbers
- * \param[in]       par_a: First value
- * \param[in]       par_b: Second value
- * \return          Sum of input values
+ * \brief           模块私有的求和偏移量
  */
-int32_t
-sum(int32_t par_a, int32_t par_b) {
+static int32_t sum_offset;
+
+/**
+ * \brief           使用模块偏移量计算 `2` 个数值的和
+ * \param[in]       val_a: 第一个数值
+ * \param[in]       val_b: 第二个数值
+ * \return          加入模块偏移量后的数值之和
+ * \hideinitializer
+ */
+#define SUM_WITH_OFFSET(val_a, val_b) ((val_a) + (val_b) + sum_offset)
+
+/**
+ * \brief           计算 `2` 个数值的和
+ * \param[in]       par_a: 第一个数值
+ * \param[in]       par_b: 第二个数值
+ * \return          输入数值之和
+ */
+int32_t sum(int32_t par_a, int32_t par_b)
+{
     return par_a + par_b;
 }
 
 /**
- * \brief           Sum `2` numbers together
- * \note            This is a strictly module-private function, hence the `prv_` prefix and `static` keyword
- * \param[in]       par_a: First parameter
- * \param[in]       par_b: Second parameter
- * \return          Sum of input values
+ * \brief           计算 `2` 个数值的和并加入模块偏移量
+ * \note            这是严格的模块私有函数，因此使用 `prv_` 前缀和 `static` 关键字
+ * \param[in]       par_a: 第一个数值
+ * \param[in]       par_b: 第二个数值
+ * \return          加入模块偏移量后的数值之和
  */
-static int32_t
-prv_sum(int32_t par_a, int32_t par_b) {
-    return par_a + par_b;
+static int32_t prv_sum(int32_t par_a, int32_t par_b)
+{
+    int32_t result;
+
+    /* 先保存中间结果，便于在函数末尾统一返回。 */
+    result = SUM_WITH_OFFSET(par_a, par_b);
+    return result;
 }

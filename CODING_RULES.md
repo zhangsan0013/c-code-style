@@ -85,7 +85,7 @@ int32_t sum_result = sum (4, 3);             /* Wrong */
     - Prefer `libname_int_` or `libnamei_` prefix for library internal functions, that should not be used by the user application while they MUST be used across different library internal modules
 - Use only lowercase characters for variables/functions/types with optional underscore `_` char
 - Variable names SHOULD be at least `3` characters long
-- Opening curly bracket is always at the same line as keyword (`for`, `while`, `do`, `switch`, `if`, ...)
+- Opening curly bracket for control statements is always at the same line as the keyword (`for`, `while`, `do`, `switch`, `if`, ...). Function definitions use the separate-line style described in the [Functions](#functions) section.
 ```c
 size_t idx;
 for (idx = 0; idx < 5; ++idx) {           /* OK */
@@ -127,8 +127,8 @@ static int32_t global_var_a = 0;   /* Avoid if initialization can be delayed */
 static int32_t global_var_a;       /* OK */
 static int32_t global_var_b = 4;   /* Avoid if startup and linker scripts may not initialize it properly */
 
-void
-my_module_init(void) {
+void my_module_init(void)
+{
     global_var_a = 0;
     global_var_b = 4;
 }
@@ -136,8 +136,8 @@ my_module_init(void) {
 
 - Declare all local variables of the same type in the same line
 ```c
-void
-my_func(void) {
+void my_func(void)
+{
     /* 1 */
     char var_char;             /* OK */
     
@@ -155,8 +155,8 @@ my_func(void) {
     2. Integer types, wider unsigned type first
     3. Single/Double floating point
 ```c
-int
-my_func(void) {
+int my_func(void)
+{
     /* 1 */
     my_struct_t my_struct;     /* First custom structures */
     my_struct_ptr_t* my_struct_ptr; /* Pointers too */
@@ -241,8 +241,8 @@ for (idx = 0; idx < 10; ++idx) ...
 
 - Avoid variable assignment with function call in declaration, except for single variables
 ```c
-void
-calculate(void) {
+void calculate(void)
+{
     /* Avoid function calls when declaring variables */
     int32_t var_value, result = sum(1, 2);
 
@@ -289,8 +289,8 @@ if (ptr || !ptr) {
 - Always check a pointer against `NULL` before dereferencing it, unless the surrounding code guarantees, by construction, that it cannot be `NULL` at that point
 ```c
 /* OK */
-void
-process(int32_t* ptr) {
+void process(int32_t* ptr)
+{
     if (ptr == NULL) {
         return; /* Guard against NULL before use */
     }
@@ -298,8 +298,8 @@ process(int32_t* ptr) {
 }
 
 /* Wrong, ptr is dereferenced without a NULL check */
-void
-process(int32_t* ptr) {
+void process(int32_t* ptr)
+{
     *ptr = 10;
 }
 ```
@@ -320,26 +320,26 @@ for (size_t idx = 0; idx < 10; ++idx) {}  /* OK */
 ```c
 
 /* When the pointer itself can be modified, but the data it points to cannot */
-void
-my_func(const void* data) {
+void my_func(const void* data)
+{
 
 }
 
 /* When neither the pointer nor the data it points to can be modified */
-void
-my_func(const void* const data) {
+void my_func(const void* const data)
+{
 
 }
 
 /* Not REQUIRED, but advised */
-void
-my_func(const size_t length) {
+void my_func(const size_t length)
+{
 
 }
 
 /* When the pointer cannot be reassigned, but the data it points to can be modified */
-void
-my_func(void* const data) {
+void my_func(void* const data)
+{
 
 }
 ```
@@ -356,14 +356,16 @@ my_func(void* const data) {
  * thus use `void *`
  */
 /* OK example */
-void
-send_data(const void* data, size_t len) { /* OK */
+void send_data(const void* data, size_t len)
+{
+    /* OK */
     /* Do not cast `void *` or `const void *` */
     const uint8_t* d_ptr = data; /* Function handles proper type for internal usage */
 }
 
-void
-send_data(const void* data, int len) {    /* Wrong, do not use int */
+void send_data(const void* data, int len)
+{
+    /* Wrong, do not use int */
 }
 ```
 
@@ -374,8 +376,8 @@ send_data(const void* data, int len) {    /* Wrong, do not use int */
 ```c
 /* OK */
 #include <stdlib.h>
-void
-my_func(size_t size) {
+void my_func(size_t size)
+{
     int32_t* arr;
     arr = malloc(sizeof(*arr) * size); /* OK, Allocate memory */
     arr = malloc(sizeof *arr * size);  /* Wrong, brackets for sizeof operator are missing */
@@ -388,8 +390,8 @@ my_func(size_t size) {
 }
 
 /* Wrong */
-void
-my_func(size_t size) {
+void my_func(size_t size)
+{
     int32_t arr[size];  /* Wrong, do not use VLA */
 }
 ```
@@ -412,7 +414,7 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 - Always use `/* comment */` for comments, even for *single-line* comment
 - Always include check for `C++` with `extern` keyword in header file
 - Every function MUST include *doxygen-enabled* comment, even if function is `static`
-- Use English names/text for functions, variables, comments
+- Use English names/text for functions and variables. Use Chinese for comments by default; keep standard Doxygen commands, code identifiers, constants, and license text unchanged.
 - Use *lowercase* characters for variables
 - Use *underscore* if variable contains multiple names, eg. `force_redraw`. Do not use `forceRedraw`
 - Never cast function returning `void *`, eg. `uint8_t* ptr = (uint8_t *)func_returning_void_ptr();` as `void *` is safely promoted to any other pointer type
@@ -425,41 +427,44 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 ## Comments
 
 - Comments starting with `//` are not allowed. Always use `/* comment */`, even for single-line comment
+- Comments SHOULD be written in Chinese by default. Use English only when required by a license, an external protocol/API, a standard identifier, or an established project convention.
+- Comments SHOULD cover more than function bodies. Add comments for global or `static` variables, macro definitions, structures/enumerations, and local variables whose meaning, unit, lifetime, hardware relation, protocol value, or other non-obvious constraint is not clear from the name alone.
+- Do not add comments that merely repeat an obvious statement. Prefer a short comment that explains intent, boundary conditions, or why a non-obvious value is required.
 ```c
 //This is comment (wrong)
-/* This is comment (ok) */
+/* 这是注释（正确） */
 ```
 
 - For multi-line comments use `space+asterisk` for every line
 ```c
 /*
- * This is multi-line comments,
- * written in 2 lines (ok)
+ * 这是多行注释，
+ * 共分为两行（正确）
  */
 
 /**
- * Wrong, use double-asterisk only for doxygen documentation
+ * 错误：双星号只用于 Doxygen 文档
  */
 
 /*
-* Single line comment without space before asterisk (wrong)
+* 错误：星号前缺少空格
 */
 
 /*
- * Single line comment in multi-line configuration (wrong)
+ * 错误：多行配置中的单行注释
  */
 
-/* Single line comment (ok) */
+/* 单行注释（正确） */
 ```
 
 - Use `12` indents (`12 * 4` spaces) offset when commenting. If statement is larger than `12` indents, make comment `4-spaces` aligned (examples below) to next available indent
 ```c
-void
-my_func(void) {
+void my_func(void)
+{
     char val_a, val_b;
 
-    val_a = call_func_returning_char_a(val_a);          /* This is comment with 12*4 spaces indent from beginning of line */
-    val_b = call_func_returning_char_a_but_func_name_is_very_long(val_a);   /* This is comment, aligned to 4-spaces indent */
+    val_a = call_func_returning_char_a(val_a);          /* 注释从行首缩进 `12 * 4` 个空格 */
+    val_b = call_func_returning_char_a_but_func_name_is_very_long(val_a);   /* 长语句的注释按 `4` 个空格对齐 */
 }
 ```
 
@@ -507,21 +512,28 @@ void set(int32_t val);
 const char * get(void);
 ```
 
-- Function implementations MUST place the return type and any storage-class or qualifier keywords on a separate line from the function name
+- Function implementations MUST keep the return type, storage-class and qualifier keywords, and the function name on the same line. The opening curly bracket MUST be on the following line. This applies to both public and `static` function definitions.
 ```c
 /* OK */
-int32_t
-foo(void) {
+int32_t foo(void)
+{
     return 0;
 }
 
 /* OK */
-static const char*
-get_string(void) {
+static const char* get_string(void)
+{
     return "Hello world!\r\n";
 }
 
 /* Wrong */
+int32_t foo(void)
+{
+
+    return 0;
+}
+
+/* Wrong, the opening curly bracket is on the same line as the function name */
 int32_t foo(void) {
 
     return 0;
@@ -531,8 +543,8 @@ int32_t foo(void) {
 - A function SHOULD have at most `2` `return` points: one early return at the top of the function for parameter/argument validation, and one return at the end of the function. Avoid `return` statements in the middle of the function body; use a return-value variable to accumulate the result instead
 ```c
 /* OK, single early-return for parameter check, single return at the end */
-int32_t
-my_func(const void* data, size_t len) {
+int32_t my_func(const void* data, size_t len)
+{
     if (data == NULL || len == 0) {
         return -1; /* Early return, parameter check */
     }
@@ -543,8 +555,8 @@ my_func(const void* data, size_t len) {
 }
 
 /* Wrong, additional return in the middle of the function body */
-int32_t
-my_func(const void* data, size_t len) {
+int32_t my_func(const void* data, size_t len)
+{
     if (data == NULL || len == 0) {
         return -1;
     }
@@ -559,8 +571,8 @@ my_func(const void* data, size_t len) {
 }
 
 /* OK, use a return-value variable instead of an extra return in the middle */
-int32_t
-my_func(const void* data, size_t len) {
+int32_t my_func(const void* data, size_t len)
+{
     int32_t retval = 0;
 
     if (data == NULL || len == 0) {
@@ -601,8 +613,8 @@ int32_t MYVar;
 
 - Group local variables together by `type`
 ```c
-void
-foo(void) {
+void foo(void)
+{
     int32_t val_a, val_b;   /* OK */
     char chr_a;
     char chr_b;              /* Wrong, char type already exists */
@@ -611,8 +623,8 @@ foo(void) {
 
 - Do not declare variable after first executable statement
 ```c
-void
-foo(void) {
+void foo(void)
+{
     int32_t val_a;
     val_a = bar();
     int32_t val_b;      /* Wrong, there is already executable statement */
@@ -1138,10 +1150,11 @@ Documented code allows doxygen to parse and generate html/pdf/latex output, thus
 - Use doxygen-enabled documentation style for `variables`, `functions` and `structures/enumerations`
 - Always use `\` for doxygen, do not use `@`
 - Pad every doxygen tag with spaces so the description text starts at column `22` of the line, matching `template.c`/`template.h`
+- Global or `static` variables and macros with module-wide or externally visible meaning MUST have a Doxygen comment. A local variable only needs a comment when its purpose, unit, lifetime, hardware relation, protocol value, or other constraint is not obvious from its name.
 ```c
 /**
- * \brief           Holds pointer to first entry in linked list
- *                  This text is aligned to the same column as the \brief description above
+ * \brief           保存链表的首个节点
+ *                  后续说明与上面的 `\brief` 描述保持同列
  */
 static
 type_t* list;
@@ -1151,25 +1164,24 @@ type_t* list;
 - Align start of comments between different structure members to the same column
 ```c
 /**
- * \brief           This is point struct
- * \note            This structure is used to calculate all point
- *                      related stuff
+ * \brief           点坐标结构体
+ * \note            此结构体用于保存点坐标及尺寸信息
  */
 typedef struct {
-    int32_t pos_x;                               /*!< Point X coordinate */
-    int32_t pos_y;                               /*!< Point Y coordinate */
-    int32_t size;                                /*!< Point size.
-                                                     Since comment is very big,
-                                                     you may go to next line */
+    int32_t pos_x;                               /*!< 点的 `X` 坐标 */
+    int32_t pos_y;                               /*!< 点的 `Y` 坐标 */
+    int32_t size;                                /*!< 点的尺寸。
+                                                     说明较长时可以
+                                                     换行继续书写 */
 } point_t;
 
 /**
- * \brief           Point color enumeration
+ * \brief           点颜色枚举
  */
 typedef enum {
-    COLOR_RED,                                  /*!< Red color */
-    COLOR_GREEN,                                /*!< Green color */
-    COLOR_BLUE,                                 /*!< Blue color */
+    COLOR_RED,                                  /*!< 红色 */
+    COLOR_GREEN,                                /*!< 绿色 */
+    COLOR_BLUE,                                 /*!< 蓝色 */
 } point_color_t;
 ```
 
@@ -1181,25 +1193,25 @@ typedef enum {
 - Use colon `:` between parameter name and its description
 ```c
 /**
- * \brief           Sum `2` numbers
- * \param[in]       par_a: First number
- * \param[in]       par_b: Second number
- * \return          Sum of input values
+ * \brief           计算 `2` 个数值的和
+ * \param[in]       par_a: 第一个数值
+ * \param[in]       par_b: 第二个数值
+ * \return          输入数值之和
  */
-int32_t
-sum(int32_t par_a, int32_t par_b) {
+int32_t sum(int32_t par_a, int32_t par_b)
+{
     return par_a + par_b;
 }
 
 /**
- * \brief           Sum `2` numbers and write it to pointer
- * \note            This function does not return value, it stores it to pointer instead
- * \param[in]       par_a: First number
- * \param[in]       par_b: Second number
- * \param[out]      result: Output variable used to save result
+ * \brief           计算 `2` 个数值的和并写入指针
+ * \note            此函数不返回数值，而是将结果写入输出指针
+ * \param[in]       par_a: 第一个数值
+ * \param[in]       par_b: 第二个数值
+ * \param[out]      result: 用于保存结果的输出变量
  */
-void
-void_sum(int32_t par_a, int32_t par_b, int32_t* result) {
+void void_sum(int32_t par_a, int32_t par_b, int32_t* result)
+{
     *result = par_a + par_b;
 }
 ```
@@ -1207,19 +1219,19 @@ void_sum(int32_t par_a, int32_t par_b, int32_t* result) {
 - If function returns member of enumeration, use `ref` keyword to specify which one
 ```c
 /**
- * \brief           My enumeration
+ * \brief           示例状态枚举
  */
 typedef enum {
-    MY_ERR,                                     /*!< Error value */
-    MY_OK                                       /*!< OK value */
+    MY_ERR,                                     /*!< 错误状态 */
+    MY_OK                                       /*!< 成功状态 */
 } my_enum_t;
 
 /**
- * \brief           Check some value
- * \return          \ref MY_OK on success, member of \ref my_enum_t otherwise
+ * \brief           检查示例状态
+ * \return          成功时返回 `\ref MY_OK`，否则返回 `\ref my_enum_t` 的其他成员
  */
-my_enum_t
-check_value(void) {
+my_enum_t check_value(void)
+{
     return MY_OK;
 }
 ```
@@ -1227,12 +1239,12 @@ check_value(void) {
 - Wrap constants, literal values, and code identifiers referenced in documentation text in backticks, eg. `` `NULL` ``
 ```c
 /**
- * \brief           Get data from input array
- * \param[in]       inp: Input data
- * \return          Pointer to output data on success, `NULL` otherwise
+ * \brief           获取输入数组中的数据
+ * \param[in]       inp: 输入数据
+ * \return          成功时返回输出数据指针，否则返回 `NULL`
  */
-const void *
-get_data(const void* inp) {
+const void* get_data(const void* inp)
+{
     return inp;
 }
 ```
@@ -1240,10 +1252,10 @@ get_data(const void* inp) {
 - Documentation for macros MUST include `hideinitializer` doxygen command
 ```c
 /**
- * \brief           Get minimal value between `val_a` and `val_b`
- * \param[in]       val_a: First value
- * \param[in]       val_b: Second value
- * \return          Minimal value between `val_a` and `val_b`
+ * \brief           获取 `val_a` 与 `val_b` 中的较小值
+ * \param[in]       val_a: 第一个数值
+ * \param[in]       val_b: 第二个数值
+ * \return          两个输入数值中的较小值
  * \hideinitializer
  */
 #define MIN(val_a, val_b)       ((val_a) < (val_b) ? (val_a) : (val_b))

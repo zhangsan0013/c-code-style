@@ -46,6 +46,9 @@ as you write, not after:
 - `const`-correct pointers and parameters; generic pointers are `void*`, cast
   internally, never cast a `void*` return value.
 - Every function with zero parameters uses `(void)`, never empty `()`.
+- Function definitions keep the return type, storage-class and qualifier
+  keywords, and the function name on the same line; the opening curly bracket
+  goes on the following line.
 - A function has **at most 2 `return` points**: one early return for
   parameter/argument validation, one at the end. No `return` in the middle -
   use a return-value variable to accumulate the result instead.
@@ -55,6 +58,10 @@ as you write, not after:
 - Boolean-treated variables are compared with `if (x)` / `if (!x)`, never
   `== 1` / `== 0`; counter/value variables use `> 0` / `== 0`, never bare
   `if (x)`.
+- Comments default to Chinese. Add comments for global or `static` variables,
+  macros, structures/enumerations, and local variables whose non-obvious
+  purpose, unit, lifetime, hardware relation, or protocol meaning needs to be
+  explained. Keep comments focused on intent instead of repeating the code.
 - Doxygen: every function (including `static` ones) gets a `\brief`, a
   `\param[in]`/`\param[out]` per parameter, and a `\return` if it returns
   non-`void`. The doc block goes at the function's **definition** (where the

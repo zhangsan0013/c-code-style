@@ -1,6 +1,6 @@
 /**
  * \file            template.h
- * \brief           Template header file
+ * \brief           模板头文件
  */
 
 /*
@@ -41,12 +41,12 @@ extern "C" {
 #endif /* __cplusplus */
 
 /**
- * \brief           This is the custom function pointer type that accepts void* as a parameter
- * \param[in]       par_a: Parameter description goes here
+ * \brief           接受 `void*` 参数的自定义函数指针类型
+ * \param[in]       par_a: 函数参数
  */
 typedef void (*my_func_type_fn)(void* par_a);
 
-/* Function prototypes, name aligned, lowercase names */
+/* 函数原型示例：函数名使用小写。 */
 int32_t sum(int32_t par_a, int32_t par_b);
 int32_t divide(int32_t par_a, int32_t par_b);
 
