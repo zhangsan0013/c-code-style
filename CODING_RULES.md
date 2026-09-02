@@ -413,8 +413,8 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 
 - Always use `/* comment */` for comments, even for *single-line* comment
 - Always include check for `C++` with `extern` keyword in header file
-- Every function MUST include *doxygen-enabled* comment, even if function is `static`
-- Use English names/text for functions and variables. Use Chinese for comments by default; keep standard Doxygen commands, code identifiers, constants, and license text unchanged.
+- Every function (including `static`) MUST have a multi-line comment using the function comment format in the Documentation section.
+- Use English names/text for functions and variables. Use Chinese for comments by default; keep code identifiers, constants, and license text unchanged.
 - Use *lowercase* characters for variables
 - Use *underscore* if variable contains multiple names, eg. `force_redraw`. Do not use `forceRedraw`
 - Never cast function returning `void *`, eg. `uint8_t* ptr = (uint8_t *)func_returning_void_ptr();` as `void *` is safely promoted to any other pointer type
@@ -428,8 +428,23 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 
 - Comments starting with `//` are not allowed. Always use `/* comment */`, even for single-line comment
 - Comments SHOULD be written in Chinese by default. Use English only when required by a license, an external protocol/API, a standard identifier, or an established project convention.
-- Comments SHOULD cover more than function bodies. Add comments for global or `static` variables, macro definitions, structures/enumerations, and local variables whose meaning, unit, lifetime, hardware relation, protocol value, or other non-obvious constraint is not clear from the name alone.
-- Do not add comments that merely repeat an obvious statement. Prefer a short comment that explains intent, boundary conditions, or why a non-obvious value is required.
+- Comments SHOULD record information that the code alone cannot express clearly,
+  such as intent, invariants, boundary conditions, units, ownership, lifetime,
+  hardware or protocol constraints, and the reason for a non-obvious value.
+  Apply this to functions, variables, macros, types, and members when needed;
+  do not comment every declaration by default.
+- Comments MUST NOT merely restate an obvious statement or repeat a name and
+  type. Prefer one concise comment that explains the contract, constraint, or
+  design reason.
+- For variables, macros, types, members, and local declarations, choose the
+  shortest comment form that preserves the needed information: omit comments
+  when the name and type are already clear, use a trailing single-line comment
+  for a short explanation, use a preceding single-line comment for module
+  state or a short declaration-level explanation, and use a preceding
+  multi-line comment only when multiple constraints, boundaries, ownership,
+  lifetime, side effects, or design reasons need to be recorded. Function
+  comments follow the multi-line comment rules in the Documentation section
+  below.
 ```c
 //This is comment (wrong)
 /* 这是注释（正确） */
@@ -440,10 +455,6 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 /*
  * 这是多行注释，
  * 共分为两行（正确）
- */
-
-/**
- * 错误：双星号只用于 Doxygen 文档
  */
 
 /*
@@ -457,14 +468,17 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 /* 单行注释（正确） */
 ```
 
-- Use `12` indents (`12 * 4` spaces) offset when commenting. If statement is larger than `12` indents, make comment `4-spaces` aligned (examples below) to next available indent
+- Keep trailing comments separated from code and visually aligned with nearby
+  comments when practical. Prefer the existing `4`-space indentation rhythm;
+  for a long statement, move the explanation to a preceding comment rather
+  than forcing an exact column.
 ```c
 void my_func(void)
 {
     char val_a, val_b;
 
-    val_a = call_func_returning_char_a(val_a);          /* 注释从行首缩进 `12 * 4` 个空格 */
-    val_b = call_func_returning_char_a_but_func_name_is_very_long(val_a);   /* 长语句的注释按 `4` 个空格对齐 */
+    val_a = call_func_returning_char_a(val_a);          /* 与附近语句保持统一间距 */
+    val_b = call_func_returning_char_a_but_func_name_is_very_long(val_a);   /* 语句过长时调整到可读位置 */
 }
 ```
 
@@ -664,7 +678,8 @@ char *cur, *nxt;
 - Structure or enumeration may contain `typedef` keyword
 - All structure members MUST be lowercase
 - All enumeration members SHOULD be uppercase
-- Structure/enumeration MUST follow doxygen documentation syntax
+- Structure and enumeration comments are optional; add them when the type or
+  member semantics are not obvious from the name and type.
 
 When structure is declared, it may use one of `3` different options:
 
@@ -1145,140 +1160,102 @@ if (cnd_a) {                    /* If cnd_a is true */
 
 ## Documentation
 
-Documented code allows doxygen to parse and generate html/pdf/latex output, thus it is very important to do it properly at an early stage of the project.
+Function comments use `/** ... */` blocks with English field labels and Chinese descriptions. This is a human-readable layout and does not require a documentation generator.
 
-- Use doxygen-enabled documentation style for `variables`, `functions` and `structures/enumerations`
-- Always use `\` for doxygen, do not use `@`
-- Pad every doxygen tag with spaces so the description text starts at column `22` of the line, matching `template.c`/`template.h`
-- Global or `static` variables and macros with module-wide or externally visible meaning MUST have a Doxygen comment. A local variable only needs a comment when its purpose, unit, lifetime, hardware relation, protocol value, or other constraint is not obvious from its name.
+- Every function (including `static`) MUST have a multi-line function comment.
+- Public API function comments MUST be placed next to declarations in header files. Private `static` function comments MUST be placed next to definitions in source files. Do not duplicate the same function contract.
+- Function comments MUST include `brief` for the purpose. Add `note` for useful side effects or constraints, `param[in]`, `param[out]`, or `param[in,out]` for parameters, and `return` for non-`void` functions.
+- Keep field labels aligned as in the examples below. Exact columns are not required, but the block should remain easy to scan.
+- Variables, macros, structures/enumerations, and members use ordinary `/* ... */` comments. Apply the shortest form that preserves non-obvious intent, constraints, units, ownership, lifetime, hardware or protocol meaning, and design reasons.
 ```c
-/**
- * \brief           保存链表的首个节点
- *                  后续说明与上面的 `\brief` 描述保持同列
- */
-static
-type_t* list;
-```
+/* 模块初始化后的默认坐标。 */
+static point_t default_point;
 
-- Every structure/enumeration member MUST include documentation
-- Align start of comments between different structure members to the same column
-```c
-/**
- * \brief           点坐标结构体
- * \note            此结构体用于保存点坐标及尺寸信息
- */
-typedef struct {
-    int32_t pos_x;                               /*!< 点的 `X` 坐标 */
-    int32_t pos_y;                               /*!< 点的 `Y` 坐标 */
-    int32_t size;                                /*!< 点的尺寸。
-                                                     说明较长时可以
-                                                     换行继续书写 */
-} point_t;
+size_t first_index; /* 第一个非零字节的索引 */
 
+/* 公共 API 的函数注释放在头文件声明处。 */
 /**
- * \brief           点颜色枚举
+ * brief           计算两个整数的和
+ * param[in]       par_a: 第一个输入值
+ * param[in]       par_b: 第二个输入值
+ * return          两个输入值之和
  */
-typedef enum {
-    COLOR_RED,                                  /*!< 红色 */
-    COLOR_GREEN,                                /*!< 绿色 */
-    COLOR_BLUE,                                 /*!< 蓝色 */
-} point_color_t;
-```
+int32_t sum(int32_t par_a, int32_t par_b);
 
-- Documentation for a function MUST be written at its *definition* (where the function body is implemented, typically the `.c` file), and MUST NOT be duplicated at its *declaration* (the prototype without a body, typically in the header file)
-- Function MUST include `brief` and all parameters documentation
-- Every parameter MUST be noted if it is `in` or `out` for *input* and *output* respectively
-- Function MUST include `return` parameter if it returns something. This does not apply for `void` functions
-- Function can include other doxygen keywords, such as `note` or `warning`
-- Use colon `:` between parameter name and its description
-```c
-/**
- * \brief           计算 `2` 个数值的和
- * \param[in]       par_a: 第一个数值
- * \param[in]       par_b: 第二个数值
- * \return          输入数值之和
- */
+/* 源文件定义处不重复同一函数说明。 */
 int32_t sum(int32_t par_a, int32_t par_b)
 {
     return par_a + par_b;
 }
 
 /**
- * \brief           计算 `2` 个数值的和并写入指针
- * \note            此函数不返回数值，而是将结果写入输出指针
- * \param[in]       par_a: 第一个数值
- * \param[in]       par_b: 第二个数值
- * \param[out]      result: 用于保存结果的输出变量
+ * brief           将结果写入输出指针
+ * note            此函数不返回数值，而是将结果写入输出指针
+ * param[in]       par_a: 第一个输入值
+ * param[in]       par_b: 第二个输入值
+ * param[out]      result: 用于保存结果的输出变量
  */
-void void_sum(int32_t par_a, int32_t par_b, int32_t* result)
-{
-    *result = par_a + par_b;
-}
+void void_sum(int32_t par_a, int32_t par_b, int32_t* result);
+
+/**
+ * brief           计算两个整数的和并加入模块偏移量
+ * note            此函数为模块私有函数，使用 `prv_` 前缀
+ * param[in]       par_a: 第一个输入值
+ * param[in]       par_b: 第二个输入值
+ * return          加入模块偏移量后的数值之和
+ */
+static int32_t prv_sum(int32_t par_a, int32_t par_b);
 ```
 
-- If function returns member of enumeration, use `ref` keyword to specify which one
+- If a function returns a member of an enumeration, describe the relevant members in `返回值：`.
 ```c
-/**
- * \brief           示例状态枚举
- */
 typedef enum {
-    MY_ERR,                                     /*!< 错误状态 */
-    MY_OK                                       /*!< 成功状态 */
+    MY_ERR, /* 错误状态 */
+    MY_OK,  /* 成功状态 */
 } my_enum_t;
 
 /**
- * \brief           检查示例状态
- * \return          成功时返回 `\ref MY_OK`，否则返回 `\ref my_enum_t` 的其他成员
+ * brief           检查示例状态
+ * return          成功时返回 `MY_OK`，否则返回其他错误状态
  */
-my_enum_t check_value(void)
-{
-    return MY_OK;
-}
+my_enum_t check_value(void);
 ```
 
-- Wrap constants, literal values, and code identifiers referenced in documentation text in backticks, eg. `` `NULL` ``
+- Wrap constants, literal values, and code identifiers referenced in comments in backticks when that improves readability.
 ```c
 /**
- * \brief           获取输入数组中的数据
- * \param[in]       inp: 输入数据
- * \return          成功时返回输出数据指针，否则返回 `NULL`
+ * brief           获取输入数组中的数据
+ * param[in]       inp: 输入数据
+ * return          成功时返回数据指针，否则返回 `NULL`
  */
-const void* get_data(const void* inp)
-{
-    return inp;
-}
+const void* get_data(const void* inp);
 ```
 
-- Documentation for macros MUST include `hideinitializer` doxygen command
+- Public or module-wide macros use ordinary comments. Keep constant values visible, use a trailing single-line comment for a short explanation, and use a preceding multi-line comment only for multiple constraints or side effects.
 ```c
-/**
- * \brief           获取 `val_a` 与 `val_b` 中的较小值
- * \param[in]       val_a: 第一个数值
- * \param[in]       val_b: 第二个数值
- * \return          两个输入数值中的较小值
- * \hideinitializer
- */
-#define MIN(val_a, val_b)       ((val_a) < (val_b) ? (val_a) : (val_b))
+#define MIN(val_a, val_b)       ((val_a) < (val_b) ? (val_a) : (val_b)) /* 返回 `val_a` 与 `val_b` 中的较小值 */
+#define BUFFER_CAPACITY         (16U) /* 公共缓冲区容量，单位为字节 */
 ```
 
 ## Header/source files
 
 - Leave single empty line at the end of file
-- Every file MUST include doxygen annotation for `file` and `brief` description followed by empty line (when using doxygen)
+- Start each file with a short ordinary comment when the file purpose is not
+  obvious from its name.
 ```c
-/**
- * \file            template.h
- * \brief           Template include file
+/*
+ * 文件：template.h
+ * 用途：模板头文件
  */
-                    /* Here is empty line */
 ```
 
-- Every file (*header* or *source*) MUST include license (opening comment includes single asterisk as this MUST be ignored by doxygen)
+- Every file (*header* or *source*) MUST include a license in an ordinary
+  block comment.
 - Use the same license as already used by project/library
 ```c
-/**
- * \file            template.h
- * \brief           Template include file
+/*
+ * 文件：template.h
+ * 用途：模板头文件
  */
 
 /*

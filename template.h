@@ -1,6 +1,6 @@
-/**
- * \file            template.h
- * \brief           模板头文件
+/*
+ * 文件：template.h
+ * 用途：模板头文件
  */
 
 /*
@@ -40,14 +40,23 @@
 extern "C" {
 #endif /* __cplusplus */
 
-/**
- * \brief           接受 `void*` 参数的自定义函数指针类型
- * \param[in]       par_a: 函数参数
- */
+/* 接受 `void*` 参数的自定义函数指针类型。 */
 typedef void (*my_func_type_fn)(void* par_a);
 
-/* 函数原型示例：函数名使用小写。 */
+/**
+ * brief           计算两个数值的和
+ * param[in]       par_a: 第一个输入值
+ * param[in]       par_b: 第二个输入值
+ * return          两个输入值之和
+ */
 int32_t sum(int32_t par_a, int32_t par_b);
+
+/**
+ * brief           计算 `par_a` 除以 `par_b`
+ * param[in]       par_a: 被除数
+ * param[in]       par_b: 除数，不能为 `0`
+ * return          除法结果
+ */
 int32_t divide(int32_t par_a, int32_t par_b);
 
 #ifdef __cplusplus

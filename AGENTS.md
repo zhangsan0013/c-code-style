@@ -11,8 +11,8 @@ complete rule set. Do not assume "typical" C conventions; several rules here
 are deliberately non-default (e.g. `(void)` required on zero-parameter
 functions, at most 2 `return` points per function, `stdbool.h` avoided,
 3-character minimum name length). `template.c` and `template.h` are
-worked, clang-format-verified reference examples — match their formatting
-and doxygen alignment exactly.
+worked, clang-format-verified reference examples — use them as formatting and
+comment-placement references.
 
 ## What the formatter fixes for you
 
@@ -49,15 +49,28 @@ A formatter cannot infer these; apply them as you write, not after:
   `free()`.
 - Boolean-treated variables: `if (x)` / `if (!x)`, never `== 1`/`== 0`.
   Counter/value variables: `> 0` / `== 0`, never bare `if (x)`.
-- Comments default to Chinese. Add comments for global or `static` variables,
-  macros, structures/enumerations, and local variables whose non-obvious
-  purpose, unit, lifetime, hardware relation, or protocol meaning needs to be
-  explained. Keep comments focused on intent instead of repeating the code.
-- Doxygen on every function (including `static`): `\brief`, `\param[in]` /
-  `\param[out]` per parameter, `\return` if non-`void`. Written at the
-  function's **definition** (the `.c` file body), never duplicated at the
-  header declaration. Description text aligned to column 22 (match
-  `template.c`). Backtick any identifier/constant/literal in prose.
+- Comments default to Chinese. Add comments when the code alone does not make
+  the intent, invariant, boundary, unit, ownership, lifetime, hardware or
+  protocol constraint, or design reason clear. Apply this to functions,
+  variables, macros, types, and members when needed; do not comment every
+  declaration by default. Keep comments focused on that information instead
+  of repeating the code.
+- Structure and enumeration members need comments only when their meaning,
+  unit, range, ownership, lifetime, hardware relation, protocol value, or
+  other constraint is not obvious from the name and type. Align member
+  comments visually when comments are present.
+- Functions (including `static`) use `/** ... */` multi-line comments with
+  English field labels `brief`, `note`, `param[in]`, `param[out]`,
+  `param[in,out]`, and `return` as applicable; descriptions remain Chinese.
+  Put public API comments near declarations in headers and private
+  implementation comments near definitions in source files. Keep one
+  canonical function contract and do not duplicate it.
+- For variables, macros, types, members, and local declarations, use the
+  shortest comment form that preserves the needed information: omit comments
+  when the name and type are already clear, use a trailing single-line comment
+  for a short explanation, use a preceding single-line comment for module
+  state, and use a preceding multi-line comment only for multiple constraints,
+  boundaries, ownership, lifetime, side effects, or design reasons.
 
 ## Format and verify
 

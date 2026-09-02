@@ -1,6 +1,6 @@
-/**
- * \file            template.c
- * \brief           模板源文件
+/*
+ * 文件：template.c
+ * 用途：模板源文件
  */
 
 /*
@@ -33,37 +33,21 @@
  */
 #include "template.h"
 
-/**
- * \brief           模块私有的求和偏移量
- */
-static int32_t sum_offset;
+static int32_t sum_offset; /* 模块私有的求和偏移量。 */
 
-/**
- * \brief           使用模块偏移量计算 `2` 个数值的和
- * \param[in]       val_a: 第一个数值
- * \param[in]       val_b: 第二个数值
- * \return          加入模块偏移量后的数值之和
- * \hideinitializer
- */
-#define SUM_WITH_OFFSET(val_a, val_b) ((val_a) + (val_b) + sum_offset)
+#define SUM_WITH_OFFSET(val_a, val_b) ((val_a) + (val_b) + sum_offset) /* 加入模块偏移量后的数值之和。 */
 
-/**
- * \brief           计算 `2` 个数值的和
- * \param[in]       par_a: 第一个数值
- * \param[in]       par_b: 第二个数值
- * \return          输入数值之和
- */
 int32_t sum(int32_t par_a, int32_t par_b)
 {
     return par_a + par_b;
 }
 
 /**
- * \brief           计算 `2` 个数值的和并加入模块偏移量
- * \note            这是严格的模块私有函数，因此使用 `prv_` 前缀和 `static` 关键字
- * \param[in]       par_a: 第一个数值
- * \param[in]       par_b: 第二个数值
- * \return          加入模块偏移量后的数值之和
+ * brief           计算两个整数的和并加入模块偏移量
+ * note            此函数为模块私有函数，使用 `prv_` 前缀
+ * param[in]       par_a: 第一个输入值
+ * param[in]       par_b: 第二个输入值
+ * return          加入模块偏移量后的数值之和
  */
 static int32_t prv_sum(int32_t par_a, int32_t par_b)
 {

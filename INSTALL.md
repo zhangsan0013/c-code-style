@@ -59,8 +59,8 @@ Copy these into your repository:
   agents; merge it with your existing `AGENTS.md` if you already have one
 - `scripts/check-format.sh` — the install-check + format/verify script both
   `AGENTS.md` and the Claude skill call out to
-- `template.c` / `template.h` — reference examples for exact formatting and
-  doxygen alignment
+- `template.c` / `template.h` — reference examples for formatting and comment
+  placement
 
 If you're using Claude Code specifically and don't want the marketplace
 plugin, copy `.claude/skills/c-code-style/` into your project instead (or in

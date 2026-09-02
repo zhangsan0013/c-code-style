@@ -58,17 +58,28 @@ as you write, not after:
 - Boolean-treated variables are compared with `if (x)` / `if (!x)`, never
   `== 1` / `== 0`; counter/value variables use `> 0` / `== 0`, never bare
   `if (x)`.
-- Comments default to Chinese. Add comments for global or `static` variables,
-  macros, structures/enumerations, and local variables whose non-obvious
-  purpose, unit, lifetime, hardware relation, or protocol meaning needs to be
-  explained. Keep comments focused on intent instead of repeating the code.
-- Doxygen: every function (including `static` ones) gets a `\brief`, a
-  `\param[in]`/`\param[out]` per parameter, and a `\return` if it returns
-  non-`void`. The doc block goes at the function's **definition** (where the
-  body is, typically the `.c` file) - never duplicated at the declaration in
-  the header. Pad tags so description text starts at column 22 (see
-  `template.c`/`template.h` for the exact alignment). Wrap identifiers,
-  constants, and literals referenced in prose in backticks.
+- Comments default to Chinese. Add comments when the code alone does not make
+  the intent, invariant, boundary, unit, ownership, lifetime, hardware or
+  protocol constraint, or design reason clear. Apply this to functions,
+  variables, macros, types, and members when needed; do not comment every
+  declaration by default. Keep comments focused on that information instead
+  of repeating the code.
+- Structure and enumeration members need comments only when their meaning,
+  unit, range, ownership, lifetime, hardware relation, protocol value, or
+  other constraint is not obvious from the name and type. Align member
+  comments visually when comments are present.
+- Functions (including `static`) use `/** ... */` multi-line comments with
+  English field labels `brief`, `note`, `param[in]`, `param[out]`,
+  `param[in,out]`, and `return` as applicable; descriptions remain Chinese.
+  Put public API comments near declarations in headers and private
+  implementation comments near definitions in source files. Keep one
+  canonical function contract and do not duplicate it.
+- For variables, macros, types, members, and local declarations, use the
+  shortest comment form that preserves the needed information: omit comments
+  when the name and type are already clear, use a trailing single-line comment
+  for a short explanation, use a preceding single-line comment for module
+  state, and use a preceding multi-line comment only for multiple constraints,
+  boundaries, ownership, lifetime, side effects, or design reasons.
 
 ## 4. Format the code
 
@@ -114,4 +125,4 @@ command per OS and exits 1), and - once `clang-format` is installed -
 correctly detects a deliberately mis-formatted file with `--check`, fixes it
 with the default (in-place) mode, and re-verifies clean afterward.
 `template.c` and `template.h` in this repository both pass `--check` as-is -
-use them as a reference for exact formatting and doxygen alignment.
+use them as formatting and comment-placement references.
