@@ -1,6 +1,6 @@
 {
   "name": "c-code-style",
-  "version": "1.0.2+codex.20260902011132",
+  "version": "1.0.3+codex.20260905090935",
   "description": "C coding style rules and clang-format enforcement for AI coding agents, based on Tilen Majerle's C style guide.",
   "author": {
     "name": "Tilen Majerle",

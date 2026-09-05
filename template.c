@@ -43,11 +43,11 @@ int32_t sum(int32_t par_a, int32_t par_b)
 }
 
 /**
- * brief           计算两个整数的和并加入模块偏移量
- * note            此函数为模块私有函数，使用 `prv_` 前缀
- * param[in]       par_a: 第一个输入值
- * param[in]       par_b: 第二个输入值
- * return          加入模块偏移量后的数值之和
+ * @brief           计算两个整数的和并加入模块偏移量
+ * @note            此函数为模块私有函数，使用 `prv_` 前缀
+ * @param[in]       par_a 第一个输入值
+ * @param[in]       par_b 第二个输入值
+ * @return          加入模块偏移量后的数值之和
  */
 static int32_t prv_sum(int32_t par_a, int32_t par_b)
 {

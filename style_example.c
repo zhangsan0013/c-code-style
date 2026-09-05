@@ -58,10 +58,10 @@ static style_status_t prv_get_status_for_length(size_t length);
 static void prv_set_point(style_point_t* point, int32_t coord_x, int32_t coord_y);
 
 /**
- * brief           检查输入缓冲区是否满足长度边界
- * param[in]       data: 待检查的数据
- * param[in]       length: 数据长度，单位为字节
- * return          有效时返回 `1`，否则返回 `0`
+ * @brief           检查输入缓冲区是否满足长度边界
+ * @param[in]       data 待检查的数据
+ * @param[in]       length 数据长度，单位为字节
+ * @return          有效时返回 `1`，否则返回 `0`
  */
 static uint8_t prv_is_valid_buffer(const void* data, size_t length)
 {
@@ -75,10 +75,10 @@ static uint8_t prv_is_valid_buffer(const void* data, size_t length)
 }
 
 /**
- * brief           使用 `do-while` 累加输入数据
- * param[in]       data: 待累加的数据
- * param[in]       length: 数据长度，单位为字节
- * return          数据累加结果
+ * @brief           使用 `do-while` 累加输入数据
+ * @param[in]       data 待累加的数据
+ * @param[in]       length 数据长度，单位为字节
+ * @return          数据累加结果
  */
 static uint32_t prv_accumulate_bytes(const void* data, size_t length)
 {
@@ -101,10 +101,10 @@ static uint32_t prv_accumulate_bytes(const void* data, size_t length)
 }
 
 /**
- * brief           查找第一个非空字节
- * param[in]       data: 待查找的数据
- * param[in]       length: 数据长度，单位为字节
- * return          第一个非空字节的索引；未找到时返回 `length`
+ * @brief           查找第一个非空字节
+ * @param[in]       data 待查找的数据
+ * @param[in]       length 数据长度，单位为字节
+ * @return          第一个非空字节的索引；未找到时返回 `length`
  */
 static size_t prv_find_first_byte(const void* data, size_t length)
 {
@@ -124,9 +124,9 @@ static size_t prv_find_first_byte(const void* data, size_t length)
 }
 
 /**
- * brief           根据数据长度选择模块状态
- * param[in]       length: 数据长度，单位为字节
- * return          选择后的模块状态
+ * @brief           根据数据长度选择模块状态
+ * @param[in]       length 数据长度，单位为字节
+ * @return          选择后的模块状态
  */
 static style_status_t prv_get_status_for_length(size_t length)
 {
@@ -158,10 +158,10 @@ static style_status_t prv_get_status_for_length(size_t length)
 }
 
 /**
- * brief           在确认指针有效后设置点坐标
- * param[out]      point: 待写入的点
- * param[in]       coord_x: 新的横坐标
- * param[in]       coord_y: 新的纵坐标
+ * @brief           在确认指针有效后设置点坐标
+ * @param[out]      point 待写入的点
+ * @param[in]       coord_x 新的横坐标
+ * @param[in]       coord_y 新的纵坐标
  */
 static void prv_set_point(style_point_t* point, int32_t coord_x, int32_t coord_y)
 {

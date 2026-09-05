@@ -59,12 +59,12 @@ A formatter cannot infer these; apply them as you write, not after:
   unit, range, ownership, lifetime, hardware relation, protocol value, or
   other constraint is not obvious from the name and type. Align member
   comments visually when comments are present.
-- Functions (including `static`) use `/** ... */` multi-line comments with
-  English field labels `brief`, `note`, `param[in]`, `param[out]`,
-  `param[in,out]`, and `return` as applicable; descriptions remain Chinese.
-  Put public API comments near declarations in headers and private
-  implementation comments near definitions in source files. Keep one
-  canonical function contract and do not duplicate it.
+- Functions (including `static`) use Doxygen `/** ... */` comments with
+  `@brief`, `@note`, `@param[in]`, `@param[out]`, `@param[in,out]`, and
+  `@return` as applicable; descriptions remain Chinese. Use `@` commands,
+  not backslash commands. Put public API comments near declarations in
+  headers and private implementation comments near definitions in source
+  files. Keep one canonical function contract and do not duplicate it.
 - For variables, macros, types, members, and local declarations, use the
   shortest comment form that preserves the needed information: omit comments
   when the name and type are already clear, use a trailing single-line comment

@@ -413,7 +413,7 @@ if (is_ok == 0)     /* Wrong, use ! for negative check */
 
 - Always use `/* comment */` for comments, even for *single-line* comment
 - Always include check for `C++` with `extern` keyword in header file
-- Every function (including `static`) MUST have a multi-line comment using the function comment format in the Documentation section.
+- Every function (including `static`) MUST have a Doxygen `/** ... */` comment using the function comment format in the Documentation section.
 - Use English names/text for functions and variables. Use Chinese for comments by default; keep code identifiers, constants, and license text unchanged.
 - Use *lowercase* characters for variables
 - Use *underscore* if variable contains multiple names, eg. `force_redraw`. Do not use `forceRedraw`
@@ -1160,13 +1160,23 @@ if (cnd_a) {                    /* If cnd_a is true */
 
 ## Documentation
 
-Function comments use `/** ... */` blocks with English field labels and Chinese descriptions. This is a human-readable layout and does not require a documentation generator.
+Function comments MUST use Doxygen-compatible `/** ... */` blocks. Doxygen
+commands MUST use the `@` prefix, not the backslash form. Command names remain
+in English and descriptions remain in Chinese.
 
-- Every function (including `static`) MUST have a multi-line function comment.
-- Public API function comments MUST be placed next to declarations in header files. Private `static` function comments MUST be placed next to definitions in source files. Do not duplicate the same function contract.
-- Function comments MUST include `brief` for the purpose. Add `note` for useful side effects or constraints, `param[in]`, `param[out]`, or `param[in,out]` for parameters, and `return` for non-`void` functions.
-- Keep field labels aligned as in the examples below. Exact columns are not required, but the block should remain easy to scan.
-- Variables, macros, structures/enumerations, and members use ordinary `/* ... */` comments. Apply the shortest form that preserves non-obvious intent, constraints, units, ownership, lifetime, hardware or protocol meaning, and design reasons.
+- Every function (including `static`) MUST have a Doxygen function comment.
+- Public API comments MUST be placed next to declarations in header files.
+  Private `static` comments MUST be placed next to definitions in source files.
+  Do not duplicate the same function contract.
+- Every function comment MUST include `@brief`. Add `@note` for side effects or
+  constraints, `@param[in]`, `@param[out]`, or `@param[in,out]` for parameters,
+  and `@return` for non-`void` functions.
+- Write parameter descriptions as `@param[in] name description`; keep the
+  command block visually aligned and easy to scan.
+- Variables, macros, structures/enumerations, and members use ordinary
+  `/* ... */` comments. Apply the shortest form that preserves non-obvious
+  intent, constraints, units, ownership, lifetime, hardware or protocol
+  meaning, and design reasons.
 ```c
 /* 模块初始化后的默认坐标。 */
 static point_t default_point;
@@ -1175,10 +1185,10 @@ size_t first_index; /* 第一个非零字节的索引 */
 
 /* 公共 API 的函数注释放在头文件声明处。 */
 /**
- * brief           计算两个整数的和
- * param[in]       par_a: 第一个输入值
- * param[in]       par_b: 第二个输入值
- * return          两个输入值之和
+ * @brief           计算两个整数的和
+ * @param[in]       par_a 第一个输入值
+ * @param[in]       par_b 第二个输入值
+ * @return          两个输入值之和
  */
 int32_t sum(int32_t par_a, int32_t par_b);
 
@@ -1189,25 +1199,29 @@ int32_t sum(int32_t par_a, int32_t par_b)
 }
 
 /**
- * brief           将结果写入输出指针
- * note            此函数不返回数值，而是将结果写入输出指针
- * param[in]       par_a: 第一个输入值
- * param[in]       par_b: 第二个输入值
- * param[out]      result: 用于保存结果的输出变量
+ * @brief           将结果写入输出指针
+ * @note            此函数不返回数值，而是将结果写入输出指针
+ * @param[in]       par_a 第一个输入值
+ * @param[in]       par_b 第二个输入值
+ * @param[out]      result 用于保存结果的输出变量
  */
 void void_sum(int32_t par_a, int32_t par_b, int32_t* result);
 
 /**
- * brief           计算两个整数的和并加入模块偏移量
- * note            此函数为模块私有函数，使用 `prv_` 前缀
- * param[in]       par_a: 第一个输入值
- * param[in]       par_b: 第二个输入值
- * return          加入模块偏移量后的数值之和
+ * @brief           计算两个整数的和并加入模块偏移量
+ * @note            此函数为模块私有函数，使用 `prv_` 前缀
+ * @param[in]       par_a 第一个输入值
+ * @param[in]       par_b 第二个输入值
+ * @return          加入模块偏移量后的数值之和
  */
-static int32_t prv_sum(int32_t par_a, int32_t par_b);
+static int32_t prv_sum(int32_t par_a, int32_t par_b)
+{
+    return par_a + par_b;
+}
 ```
 
-- If a function returns a member of an enumeration, describe the relevant members in `返回值：`.
+- If a function returns an enumeration member, describe the relevant members
+  in `@return`.
 ```c
 typedef enum {
     MY_ERR, /* 错误状态 */
@@ -1215,23 +1229,26 @@ typedef enum {
 } my_enum_t;
 
 /**
- * brief           检查示例状态
- * return          成功时返回 `MY_OK`，否则返回其他错误状态
+ * @brief           检查示例状态
+ * @return          成功时返回 `MY_OK`，否则返回其他错误状态
  */
 my_enum_t check_value(void);
 ```
 
-- Wrap constants, literal values, and code identifiers referenced in comments in backticks when that improves readability.
+- Wrap constants, literal values, and code identifiers referenced in comments
+  in backticks when that improves readability.
 ```c
 /**
- * brief           获取输入数组中的数据
- * param[in]       inp: 输入数据
- * return          成功时返回数据指针，否则返回 `NULL`
+ * @brief           获取输入数组中的数据
+ * @param[in]       inp 输入数据
+ * @return          成功时返回数据指针，否则返回 `NULL`
  */
 const void* get_data(const void* inp);
 ```
 
-- Public or module-wide macros use ordinary comments. Keep constant values visible, use a trailing single-line comment for a short explanation, and use a preceding multi-line comment only for multiple constraints or side effects.
+- Public or module-wide macros use ordinary comments. Keep constant values
+  visible, use a trailing single-line comment for a short explanation, and use
+  a preceding multi-line comment only for multiple constraints or side effects.
 ```c
 #define MIN(val_a, val_b)       ((val_a) < (val_b) ? (val_a) : (val_b)) /* 返回 `val_a` 与 `val_b` 中的较小值 */
 #define BUFFER_CAPACITY         (16U) /* 公共缓冲区容量，单位为字节 */
@@ -1317,15 +1334,15 @@ int32_t my_variable;        /* Actually defined in source */
 
 /* Include headers */
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 extern "C" {
-#endif /* __cplusplus */
+#endif /* defined(__cplusplus) */
 
 /* File content here */
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 }
-#endif /* __cplusplus */
+#endif /* defined(__cplusplus) */
 
 #endif /* TEMPLATE_HDR_H */
 ```

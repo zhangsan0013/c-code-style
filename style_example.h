@@ -77,7 +77,7 @@ typedef enum {
 
 typedef struct style_point {
     int32_t pos_x; /* 结果横坐标，单位为模块坐标 */
-    int32_t pos_y; /* 第一个非零字节的索引 */
+    int32_t pos_y; /* 结果纵坐标，单位为模块坐标 */
 } style_point_t;
 
 typedef struct {
@@ -92,74 +92,74 @@ typedef void (*style_callback_fn)(const void* data, size_t length);
 extern style_status_t style_status;
 
 /**
- * brief           初始化示例模块的运行状态
+ * @brief           初始化示例模块的运行状态
  */
 void style_example_init(void);
 
 /**
- * brief           计算两个有符号整数的和
- * param[in]       par_a: 第一个输入值
- * param[in]       par_b: 第二个输入值
- * return          两个输入值之和
+ * @brief           计算两个有符号整数的和
+ * @param[in]       par_a 第一个输入值
+ * @param[in]       par_b 第二个输入值
+ * @return          两个输入值之和
  */
 int32_t style_example_sum(int32_t par_a, int32_t par_b);
 
 /**
- * brief           获取当前模块状态
- * return          当前模块状态
+ * @brief           获取当前模块状态
+ * @return          当前模块状态
  */
 style_status_t style_example_get_status(void);
 
 /**
- * brief           处理一段数据并更新输出点
- * note            成功时更新全局 `style_status`，并同步调用已注册回调
- * param[in]       data: 至少包含 `length` 个字节的数据
- * param[in]       length: 输入数据长度，单位为字节
- * param[out]      point: 用于保存结果的输出点
- * return          成功返回 `STYLE_EXAMPLE_RESULT_OK`；参数无效返回
+ * @brief           处理一段数据并更新输出点
+ * @note            成功时更新全局 `style_status`，并同步调用已注册回调
+ * @param[in]       data 至少包含 `length` 个字节的数据
+ * @param[in]       length 输入数据长度，单位为字节
+ * @param[out]      point 用于保存结果的输出点
+ * @return          成功返回 `STYLE_EXAMPLE_RESULT_OK`；参数无效返回
  *                 `STYLE_EXAMPLE_RESULT_INVALID`；处理失败返回
  *                 `STYLE_EXAMPLE_RESULT_FAILED`
  */
 int32_t style_example_process(const void* data, size_t length, style_point_t* point);
 
 /**
- * brief           复制任意类型的数据到动态缓冲区
- * note            成功后由调用者使用 `style_example_release` 释放 `output`
- * param[in]       source: 待复制的数据
- * param[in]       length: 数据长度，单位为字节
- * param[out]      output: 接收动态缓冲区，调用前必须为空
- * return          成功返回 `STYLE_EXAMPLE_RESULT_OK`；参数无效返回
+ * @brief           复制任意类型的数据到动态缓冲区
+ * @note            成功后由调用者使用 `style_example_release` 释放 `output`
+ * @param[in]       source 待复制的数据
+ * @param[in]       length 数据长度，单位为字节
+ * @param[out]      output 接收动态缓冲区，调用前必须为空
+ * @return          成功返回 `STYLE_EXAMPLE_RESULT_OK`；参数无效返回
  *                 `STYLE_EXAMPLE_RESULT_INVALID`；输出对象忙或内存不足返回
  *                 `STYLE_EXAMPLE_RESULT_FAILED`
  */
 int32_t style_example_copy(const void* source, size_t length, style_buffer_t* output);
 
 /**
- * brief           使用指定字节填充输出缓冲区
- * param[in]       data: 至少包含 `length` 个可写字节的缓冲区
- * param[in]       length: 填充长度，单位为字节
- * param[in]       value: 填充字节
- * return          成功返回 `STYLE_EXAMPLE_RESULT_OK`；参数无效返回
+ * @brief           使用指定字节填充输出缓冲区
+ * @param[in]       data 至少包含 `length` 个可写字节的缓冲区
+ * @param[in]       length 填充长度，单位为字节
+ * @param[in]       value 填充字节
+ * @return          成功返回 `STYLE_EXAMPLE_RESULT_OK`；参数无效返回
  *                 `STYLE_EXAMPLE_RESULT_INVALID`
  */
 int32_t style_example_fill(void* const data, size_t length, uint8_t value);
 
 /**
- * brief           释放动态缓冲区并清除悬空指针
- * param[in,out]   buffer: 待释放的缓冲区；调用后指针和长度清零
+ * @brief           释放动态缓冲区并清除悬空指针
+ * @param[in,out]   buffer 待释放的缓冲区；调用后指针和长度清零
  */
 void style_example_release(style_buffer_t* buffer);
 
 /**
- * brief           获取动态缓冲区中的通用数据指针
- * param[in]       buffer: 待查询的缓冲区
- * return          缓冲区数据指针；参数无效时返回 `NULL`
+ * @brief           获取动态缓冲区中的通用数据指针
+ * @param[in]       buffer 待查询的缓冲区
+ * @return          缓冲区数据指针；参数无效时返回 `NULL`
  */
 const void* style_example_get_data(const style_buffer_t* buffer);
 
 /**
- * brief           注册或清除数据处理回调
- * param[in]       callback: 回调函数；为 `NULL` 时清除当前回调
+ * @brief           注册或清除数据处理回调
+ * @param[in]       callback 回调函数；为 `NULL` 时清除当前回调
  */
 void style_example_register_callback(style_callback_fn callback);
 
